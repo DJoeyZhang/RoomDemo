@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context="com.jkt.roomdemo.MainActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/insert_one"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_height="40dp"
+                android:onClick="onClick"
+                android:text="insert one user data"
+                />
+
+            <Button
+                android:id="@+id/insert_some"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_height="40dp"
+                android:onClick="onClick"
+                android:text="insert some user data"
+                />
+            <Button
+                android:id="@+id/update_one"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_height="40dp"
+                android:onClick="onClick"
+                android:text="update user by random primary key index(0-10)"
+                />
+            <Button
+                android:id="@+id/find_one"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_height="40dp"
+                android:onClick="onClick"
+                android:text="find user  by random primary key index(0-10) "
+                />
+
+            <Button
+                android:id="@+id/find_all"
+                android:layout_marginTop="5dp"
+                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:onClick="onClick"
+                android:text="find all user "
+                />
+
+            <Button
+                android:id="@+id/delete_one"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_height="40dp"
+                android:onClick="onClick"
+                android:text="delete one  by random primary key index(0-10) "
+                />
+
+            <Button
+                android:id="@+id/delete_all"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_height="40dp"
+                android:onClick="onClick"
+                android:text="delete all user "
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_height="40dp"
+                android:text="action msg:"/>
+            <TextView
+                android:layout_marginTop="20dp"
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:id="@+id/tv"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
