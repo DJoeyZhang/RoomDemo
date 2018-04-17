@@ -21,6 +21,9 @@ public class User {
 
     @ColumnInfo(name = "last_name")
     private String lastName;
+
+    @ColumnInfo(name = "age")
+    private int age;
     // Getters and setters are ignored for brevity,
     // but they're required for Room to work.
 
@@ -60,7 +63,20 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
     }
+    @Ignore
+    public User(String firstName, String lastName, int age) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+    }
 
+    @Ignore
+    public User(int uid, String firstName, String lastName, int age) {
+        this.uid = uid;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+    }
 
     public String getLastName() {
         return lastName;
@@ -70,12 +86,22 @@ public class User {
         this.lastName = lastName;
     }
 
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "uid=" + uid +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", age='" + age + '\'' +
                 '}';
     }
+
 }

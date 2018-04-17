@@ -24,6 +24,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "roomDemo-database")
+                //添加数据库的变动迁移支持(当前状态从version1到version2的变动处理)
+                //主要在user里面加入了age字段,大家可以git reset --hard <commit> 到第一个版本
+                //然后debug 手动生成一些数据。然后debug 该版本查看数据库升级体现。
+                .addMigrations(AppDatabase.MIGRATION_1_2)
                 //下面注释表示允许主线程进行数据库操作，但是不推荐这样做。
                 //他可能造成主线程lock以及anr
 //                .allowMainThreadQueries()
@@ -42,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         //返回的是插入元素的primary key index
-                        Long aLong = mUserDao.insert(new User("t" + System.currentTimeMillis() / 1000, "allen"));
+                        Long aLong = mUserDao.insert(new User("t" + System.currentTimeMillis() / 1000, "allen", 18));
                         if (aLong > 0) {
                             String msg = "insert one success, index is " + aLong.toString();
                             mBuffer.append(msg + "\n");
@@ -61,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         ArrayList<User> users = new ArrayList<>();
-                        users.add(new User("t" + System.currentTimeMillis() / 1000, "jordan"));
-                        users.add(new User("t" + System.currentTimeMillis() / 1000, "james"));
+                        users.add(new User("t" + System.currentTimeMillis() / 1000, "jordan",20));
+                        users.add(new User("t" + System.currentTimeMillis() / 1000, "james",21));
                         List<Long> longs = mUserDao.insertAll(users);
                         if (longs != null && longs.size() > 0) {
                             for (Long aLong : longs) {
@@ -156,8 +160,6 @@ public class MainActivity extends AppCompatActivity {
                             Log.i(TAG, msg);
                         }
                         MainActivity.this.setMsg();
-
-
                     }
                 }).start();
                 break;
@@ -177,7 +179,6 @@ public class MainActivity extends AppCompatActivity {
                             mBuffer.append(msg + "\n");
                         }
                         MainActivity.this.setMsg();
-
                     }
                 }).start();
                 break;
