@@ -1,5 +1,6 @@
 package com.jkt.roomdemo;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -18,7 +19,7 @@ public interface UserDao {
     //所有的CURD根据primary key进行匹配
     //------------------------query------------------------
     @Query("SELECT * FROM user")
-    List<User> getAll();
+    LiveData<List<User>> getAll();
 
     @Query("SELECT * FROM user WHERE uid IN (:userIds)")
     List<User> loadAllByIds(int[] userIds);
@@ -28,8 +29,7 @@ public interface UserDao {
     User findByName(String first, String last);
 
     @Query("SELECT * FROM user WHERE uid = :uid")
-    User findByUid(int uid);
-
+    LiveData<User> findByUid(int uid);
     //-----------------------insert----------------------
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insert(User user);

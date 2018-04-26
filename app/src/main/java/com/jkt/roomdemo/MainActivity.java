@@ -1,7 +1,10 @@
 package com.jkt.roomdemo;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.persistence.room.Room;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +38,30 @@ public class MainActivity extends AppCompatActivity {
         mUserDao = db.userDao();
         mMsgTV = (TextView) findViewById(R.id.tv);
         mBuffer = new StringBuffer();
+        //数据库增、删、改都会被观察到 这次观察的所有数据（查询方法不会被观察）
+        LiveData<List<User>> all = mUserDao.getAll();
+        all.observe(MainActivity.this, new Observer<List<User>>() {
+            @Override
+            public void onChanged(@Nullable List<User> users) {
+                if (users == null) {
+                    return;
+                }
+                Log.i("thedata", "observe all " + users.toString());
+            }
+        });
+        //数据库增、删、改都会被观察到 这次观察的是uid为3的数据（查询方法不会被观察）
+        LiveData<User> userLiveData = mUserDao.findByUid(3);
+        userLiveData.observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(@Nullable User user) {
+                if (user == null) {
+                    Log.i("thedata", "observe  one  " + user);
+                    return;
+                }
+                Log.i("thedata", "observe  one  " + user.toString());
+
+            }
+        });
 
     }
 
@@ -129,7 +156,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         int random = new Random().nextInt(9) + 1;
-                        User user = mUserDao.findByUid(random);
+                        User user = null;
+                        try {
+                            user = LiveDataUtil.getValue(mUserDao.findByUid(random));
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         if (user != null) {
                             String msg = "find one success , index is " + random + "  user:  " + user.toString();
                             mBuffer.append(msg + "\n");
@@ -147,7 +179,12 @@ public class MainActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        List<User> all = mUserDao.getAll();
+                        List<User> all = null;
+                        try {
+                            all = LiveDataUtil.getValue(mUserDao.getAll());
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         if (all != null && all.size() > 0) {
                             for (User user1 : all) {
                                 String msg = "find all success ,item  : " + user1.toString();
@@ -167,16 +204,15 @@ public class MainActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        List<User> all = mUserDao.getAll();
-                        if (all != null && all.size() > 0) {
-                            int i = mUserDao.deleteAll(all);
-                            String msg = "delete all success , delete  size " + i;
-                            mBuffer.append(msg + "\n");
-                            Log.i(TAG, msg);
-                        } else {
-                            String msg = "delete all fail , no user item  exist ";
-                            Log.i(TAG, msg);
-                            mBuffer.append(msg + "\n");
+                        LiveData<List<User>> all = mUserDao.getAll();
+                        List<User> users = null;
+                        try {
+                            users = LiveDataUtil.getValue(all);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        if (users != null && users.size() > 0) {
+                            mUserDao.deleteAll(users);
                         }
                         MainActivity.this.setMsg();
                     }
